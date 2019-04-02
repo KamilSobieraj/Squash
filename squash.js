@@ -107,28 +107,29 @@ const draw = {
       canvasContext.font = "30px Georgia";
       canvasContext.textAlign = "center";
       canvasContext.fillText(
-        `You won!`,
-        canvas.width / 2 - 40,
-        canvas.height / 2 - 50
+        `You win!`,
+        canvas.width / 2,
+        canvas.height / 2 - 100
       );
+      canvasContext.textAlign = "center";
       canvasContext.fillText(
         `Click to continue.`,
-        canvas.width / 2 - 35,
-        canvas.height / 2 + 50
+        canvas.width / 2,
+        canvas.height / 2
       );
     },
     loser: function() {
       canvasContext.font = "30px Georgia";
       canvasContext.textAlign = "center";
       canvasContext.fillText(
-        `You lost!`,
-        canvas.width / 2 - 40,
-        canvas.height / 2 - 50
+        `You lose!`,
+        canvas.width / 2,
+        canvas.height / 2 - 100
       );
       canvasContext.fillText(
         `Click to continue.`,
-        canvas.width / 2 - 35,
-        canvas.height / 2 + 50
+        canvas.width / 2,
+        canvas.height / 2
       );
     }
   },
