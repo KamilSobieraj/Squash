@@ -193,6 +193,7 @@ const movement = {
     ball.yPosition += ball.ySpeed;
     //Bouncing a ball with a paddle
     //Left paddle
+    /*
     if (ball.xPosition < 0) {
       if (
         ball.yPosition > paddle.leftYPosition &&
@@ -206,9 +207,9 @@ const movement = {
         score.computer++;
         movement.ballPositionReset();
       }
-    }
+    }*/
     //Right paddle
-    if (ball.xPosition > canvas.width - ball.size) {
+    /*if (ball.xPosition > canvas.width - ball.size) {
       if (
         ball.yPosition > paddle.rightYPosition &&
         ball.yPosition < paddle.rightYPosition + paddle.height
@@ -221,13 +222,16 @@ const movement = {
         score.user++;
         movement.ballPositionReset();
       }
-    }
+    }*/
     //Top and bottom ball bounce
     if (ball.yPosition < 0) {
       ball.ySpeed = -ball.ySpeed;
     }
-    if (ball.yPosition > canvas.height) {
-      ball.ySpeed = -ball.ySpeed;
+    if (ball.xPosition < 0) {
+      ball.xSpeed = -ball.xSpeed;
+    }
+    if (ball.xPosition > canvas.width) {
+      ball.xSpeed = -ball.xSpeed;
     }
   }
 };
