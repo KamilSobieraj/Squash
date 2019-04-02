@@ -84,7 +84,7 @@ const draw = {
       canvas.height - paddle.height,
       paddle.width,
       paddle.height,
-      "white"
+      "red"
     );
   },
   computerPaddel: function() {
@@ -172,9 +172,9 @@ const movement = {
   computerPaddel: function() {
     let paddleRightCenter = paddle.rightXPosition + paddle.width / 2;
     if (paddleRightCenter < ball.xPosition - 35) {
-      paddle.rightXPosition += 7;
+      paddle.rightXPosition += 6;
     } else if (paddleRightCenter > ball.xPosition + 35) {
-      paddle.rightXPosition -= 7;
+      paddle.rightXPosition -= 6;
     }
   },
   ballPositionReset: function() {
@@ -184,10 +184,12 @@ const movement = {
     ) {
       score.showResult = true;
     }
-    ball.xSpeed = -ball.xSpeed;
-    ball.ySpeed = 3;
+    //ball.xSpeed = -ball.xSpeed;
+    ball.xSpeed = -4;
+    ball.ySpeed = -4;
+    //ball.ySpeed = -ball.ySpeed;
     ball.xPosition = canvas.width / 2;
-    ball.yPosition = canvas.height / 2;
+    ball.yPosition = canvas.height / 2 - 100;
   },
   changeTurn: function() {
     paddle.userTurn = !paddle.userTurn;
@@ -204,8 +206,8 @@ const movement = {
       if (ball.yPosition > canvas.height) {
         //if bounced
         if (
-          ball.xPosition > paddle.leftXPosition &&
-          ball.xPosition < paddle.leftXPosition + paddle.width
+          ball.xPosition > paddle.leftXPosition - 5 &&
+          ball.xPosition < paddle.leftXPosition + paddle.width + 5
         ) {
           ball.ySpeed = -ball.ySpeed;
           let paddleHitPoint =
