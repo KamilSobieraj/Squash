@@ -1,5 +1,6 @@
 const canvas = document.getElementById("gameCanvas");
 const canvasContext = canvas.getContext("2d");
+
 //Ball
 const ball = {
   size: 10,
@@ -14,9 +15,10 @@ const paddle = {
   width: 100,
   height: 10,
   leftXPosition: 50,
-  rightXPosition: canvas.width - 150,
-  lastHited: false
+  rightXPosition: 350,
+  userTurn: true
 };
+
 //Score
 const score = {
   user: 0,
@@ -87,8 +89,8 @@ const draw = {
   },
   computerPaddel: function() {
     draw.rectangle(
-      canvas.width - paddle.width,
       paddle.rightXPosition,
+      canvas.height - paddle.height,
       paddle.width,
       paddle.height,
       "white"
@@ -145,7 +147,7 @@ const draw = {
       }
       return;
     }
-    //draw.computerPaddel();
+    draw.computerPaddel();
     draw.userPaddel();
     draw.ball();
     draw.score.current();
@@ -168,11 +170,11 @@ const movement = {
     paddle.leftXPosition = mousePos.x - paddle.width / 2;
   },
   computerPaddel: function() {
-    let paddleRightCenter = paddle.rightXPosition + paddle.height / 2;
-    if (paddleRightCenter < ball.yPosition - 35) {
-      paddle.rightXPosition += 6;
-    } else if (paddleRightCenter > ball.yPosition + 35) {
-      paddle.rightXPosition -= 6;
+    let paddleRightCenter = paddle.rightXPosition + paddle.width / 2;
+    if (paddleRightCenter < ball.xPosition - 35) {
+      paddle.rightXPosition += 7;
+    } else if (paddleRightCenter > ball.xPosition + 35) {
+      paddle.rightXPosition -= 7;
     }
   },
   ballPositionReset: function() {
@@ -183,9 +185,12 @@ const movement = {
       score.showResult = true;
     }
     ball.xSpeed = -ball.xSpeed;
-    ball.ySpeed = 4;
+    ball.ySpeed = 3;
     ball.xPosition = canvas.width / 2;
     ball.yPosition = canvas.height / 2;
+  },
+  changeTurn: function() {
+    paddle.userTurn = !paddle.userTurn;
   },
   everyting: function() {
     score.showResult;
@@ -193,38 +198,44 @@ const movement = {
     ball.xPosition += ball.xSpeed;
     ball.yPosition += ball.ySpeed;
     //Bouncing a ball with a paddle
-    //User paddle
-    if (ball.yPosition > canvas.height) {
-      //if bounced
-      if (
-        ball.xPosition > paddle.leftXPosition &&
-        ball.xPosition < paddle.leftXPosition + paddle.width
-      ) {
-        ball.ySpeed = -ball.ySpeed;
-        let paddleHitPoint =
-          ball.xPosition - (paddle.leftXPosition + paddle.width / 2); //Calc in which part of paddle ball is hitting
-        ball.ySpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
-        paddle.lastHited = !paddle.lastHited;
-      } else {
-        score.computer++;
-        movement.ballPositionReset();
+    //User paddle turn
+
+    if (paddle.userTurn === true) {
+      if (ball.yPosition > canvas.height) {
+        //if bounced
+        if (
+          ball.xPosition > paddle.leftXPosition &&
+          ball.xPosition < paddle.leftXPosition + paddle.width
+        ) {
+          ball.ySpeed = -ball.ySpeed;
+          let paddleHitPoint =
+            ball.xPosition - (paddle.leftXPosition + paddle.width / 2); //Calc in which part of paddle ball is hitting
+          ball.xSpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
+          movement.changeTurn();
+        } else {
+          score.computer++;
+          movement.ballPositionReset();
+        }
+      }
+    } else {
+      //Computer paddle
+      if (ball.yPosition > canvas.height) {
+        if (
+          ball.xPosition > paddle.rightXPosition &&
+          ball.xPosition < paddle.rightXPosition + paddle.width
+        ) {
+          ball.ySpeed = -ball.ySpeed;
+          let paddleHitPoint =
+            ball.xPosition - (paddle.rightXPosition + paddle.width / 2); //Calc in which part of paddle ball is hitting
+          ball.xSpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
+          movement.changeTurn();
+        } else {
+          score.user++;
+          movement.ballPositionReset();
+        }
       }
     }
-    //Right paddle
-    /*if (ball.xPosition > canvas.width - ball.size) {
-      if (
-        ball.yPosition > paddle.rightXPosition &&
-        ball.yPosition < paddle.rightXPosition + paddle.height
-      ) {
-        ball.xSpeed = -ball.xSpeed;
-        let paddleHitPoint =
-          ball.yPosition - (paddle.rightXPosition + paddle.height / 2); //Calc in which part of paddle ball is hitting
-        ball.ySpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
-      } else {
-        score.user++;
-        movement.ballPositionReset();
-      }
-    }*/
+
     //Top and bottom ball bounce
     if (ball.yPosition < 0) {
       ball.ySpeed = -ball.ySpeed;
@@ -241,6 +252,7 @@ const movement = {
 function startGame() {
   draw.everything();
   movement.everyting();
+  console.log(paddle.userTurn);
 }
 setInterval(startGame, 1000 / draw.framesPerSecond);
 
