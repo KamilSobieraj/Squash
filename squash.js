@@ -11,10 +11,11 @@ const ball = {
 };
 //Paddle
 const paddle = {
-  width: 10,
-  height: 100,
-  leftYPosition: 250,
-  rightYPosition: 250
+  width: 100,
+  height: 10,
+  leftXPosition: 50,
+  rightXPosition: canvas.width - 150,
+  lastHited: false
 };
 //Score
 const score = {
@@ -77,8 +78,8 @@ const draw = {
   },
   userPaddel: function() {
     draw.rectangle(
-      0,
-      paddle.leftYPosition,
+      paddle.leftXPosition,
+      canvas.height - paddle.height,
       paddle.width,
       paddle.height,
       "white"
@@ -87,7 +88,7 @@ const draw = {
   computerPaddel: function() {
     draw.rectangle(
       canvas.width - paddle.width,
-      paddle.rightYPosition,
+      paddle.rightXPosition,
       paddle.width,
       paddle.height,
       "white"
@@ -144,7 +145,7 @@ const draw = {
       }
       return;
     }
-    draw.computerPaddel();
+    //draw.computerPaddel();
     draw.userPaddel();
     draw.ball();
     draw.score.current();
@@ -164,14 +165,14 @@ const movement = {
   },
   userPaddel: function(e) {
     let mousePos = movement.calculateMousePosition(e);
-    paddle.leftYPosition = mousePos.y - paddle.height / 2;
+    paddle.leftXPosition = mousePos.x - paddle.width / 2;
   },
   computerPaddel: function() {
-    let paddleRightCenter = paddle.rightYPosition + paddle.height / 2;
+    let paddleRightCenter = paddle.rightXPosition + paddle.height / 2;
     if (paddleRightCenter < ball.yPosition - 35) {
-      paddle.rightYPosition += 6;
+      paddle.rightXPosition += 6;
     } else if (paddleRightCenter > ball.yPosition + 35) {
-      paddle.rightYPosition -= 6;
+      paddle.rightXPosition -= 6;
     }
   },
   ballPositionReset: function() {
@@ -192,31 +193,32 @@ const movement = {
     ball.xPosition += ball.xSpeed;
     ball.yPosition += ball.ySpeed;
     //Bouncing a ball with a paddle
-    //Left paddle
-    /*
-    if (ball.xPosition < 0) {
+    //User paddle
+    if (ball.yPosition > canvas.height) {
+      //if bounced
       if (
-        ball.yPosition > paddle.leftYPosition &&
-        ball.yPosition < paddle.leftYPosition + paddle.height
+        ball.xPosition > paddle.leftXPosition &&
+        ball.xPosition < paddle.leftXPosition + paddle.width
       ) {
-        ball.xSpeed = -ball.xSpeed;
+        ball.ySpeed = -ball.ySpeed;
         let paddleHitPoint =
-          ball.yPosition - (paddle.leftYPosition + paddle.height / 2); //Calc in which part of paddle ball is hitting
+          ball.xPosition - (paddle.leftXPosition + paddle.width / 2); //Calc in which part of paddle ball is hitting
         ball.ySpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
+        paddle.lastHited = !paddle.lastHited;
       } else {
         score.computer++;
         movement.ballPositionReset();
       }
-    }*/
+    }
     //Right paddle
     /*if (ball.xPosition > canvas.width - ball.size) {
       if (
-        ball.yPosition > paddle.rightYPosition &&
-        ball.yPosition < paddle.rightYPosition + paddle.height
+        ball.yPosition > paddle.rightXPosition &&
+        ball.yPosition < paddle.rightXPosition + paddle.height
       ) {
         ball.xSpeed = -ball.xSpeed;
         let paddleHitPoint =
-          ball.yPosition - (paddle.rightYPosition + paddle.height / 2); //Calc in which part of paddle ball is hitting
+          ball.yPosition - (paddle.rightXPosition + paddle.height / 2); //Calc in which part of paddle ball is hitting
         ball.ySpeed = paddleHitPoint * 0.2; //Ball change direction depends on what part of paddle P1 hit
       } else {
         score.user++;
